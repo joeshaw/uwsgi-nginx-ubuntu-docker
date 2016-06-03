@@ -11,6 +11,8 @@ RUN apt-get update \
 
 # Install uWSGI
 RUN pip install uwsgi
+RUN mkdir -p /etc/uwsgi
+COPY uwsgi.ini /etc/uwsgi/
 
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
