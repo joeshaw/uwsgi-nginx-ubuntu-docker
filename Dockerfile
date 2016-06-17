@@ -3,7 +3,7 @@ FROM ubuntu:12.04
 MAINTAINER Joe Shaw <joe@joeshaw.org>
 
 RUN apt-get update \
-        && apt-get install -y python-pip python-virtualenv python-dev python-software-properties supervisor \
+        && apt-get install -y python-pip python-virtualenv python-dev python-software-properties \
         && add-apt-repository ppa:nginx/stable \
         && apt-get update \
         && apt-get install -y nginx \
@@ -24,10 +24,12 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 # Copy the modified Nginx conf
 COPY nginx.conf /etc/nginx/conf.d/
 
+# Install Supervisord
+RUN pip install supervisor
 # Custom Supervisord config
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY supervisord.conf /etc/supervisord.conf
 
 COPY ./app /app
 WORKDIR /app
 
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/local/bin/supervisord", "-c", "/etc/supervisord.conf"]
